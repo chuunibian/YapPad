@@ -1,0 +1,249 @@
+MarkdownLogScreen {
+    layout: vertical;
+    background: $background; 
+}
+
+#top-bar {
+    dock: top;
+    height: 3;
+    padding: 0 2;
+    align: left middle;
+    background: transparent;
+}
+
+#top-bar-icon {
+    width: auto;
+    padding: 0 1;
+    content-align: center middle;
+    color: #a684e8;
+}
+
+#top-bar-input {
+    width: 1fr;
+    border: round #444444;
+    background: transparent;
+}
+
+#top-bar-input:focus {
+    border: round $primary;
+}
+
+#master {
+    height: 1fr;
+    width: 100%;
+    border: round #444444; 
+    border-title-color: #a684e8;
+    background: transparent;
+    overflow: auto auto;
+}
+
+#main-row {
+    height: 1fr;
+    width: 100%;
+    padding: 0 2;
+}
+
+#right-column {
+    height: 100%;
+    width: 1fr;
+}
+
+#user {
+    width: 1fr;
+    height: 100%;
+    border: round #444444;
+    border-title-color: #a684e8;
+    background: transparent;
+    margin-right: 1;
+}
+
+#transcript {
+    width: 100%;
+    height: 1fr;
+    border: round #444444;
+    border-title-color: #a684e8;
+    background: transparent;
+}
+
+#transcript-row {
+    height: 1fr;
+    width: 100%;
+}
+
+#transcript-editor, #transcript-editor-loopback {
+    width: 1fr;
+    height: 100%;
+}
+
+#transcript-loopback {
+    width: 100%;
+    height: 1fr;
+    border: round #444444;
+    border-title-color: #a684e8;
+    background: transparent;
+}
+
+#bottom-bar {
+    dock: bottom;
+    height: 1;
+    padding: 0 2;
+    width: 100%;
+    background: transparent;
+}
+
+Footer {
+    dock: none;
+    width: 1fr; 
+}
+
+#status-indicator {
+    width: auto;
+    padding: 0 1;
+    background: $boost;
+    color: $text;
+}
+
+$primary: #FF69B4;
+
+#master:focus {
+    border: round $primary;
+    border-title-color: white; 
+    border-title-style: b;
+}
+
+#user:focus {
+    border: round $primary;
+    border-title-color: white;
+    border-title-style: b;
+}
+
+#transcript:focus {
+    border: round $primary;
+    border-title-color: white;
+    border-title-style: b;
+}
+
+#transcript-loopback:focus {
+    border: round $primary;
+    border-title-color: white;
+    border-title-style: b;
+}
+
+#file-tree {
+    width: 1fr;
+}
+
+#md-viewer {
+    width: 1fr;
+}
+
+TextArea, RichLog {
+    background: transparent;
+    border: none;
+}
+
+CustomTranscriptFooter {
+    height: 1;
+    width: 100%;
+    padding: 0 1;
+    background: $boost;
+}
+
+#queue-indicator {
+    width: auto;
+    color: $text-muted;
+}
+
+PopupComponent {
+    align: center middle;
+}
+
+PopupComponent > Footer {
+    dock: bottom;
+    width: 100%;
+}
+
+PopupComponent > Horizontal {
+    width: 90;
+    height: 80%;
+    border: thick $background 80%;
+    background: $surface;
+}
+
+PopupComponent #popup-left {
+    width: 1fr;
+    height: 1fr;
+    padding: 0 1;
+}
+
+PopupComponent #popup-right {
+    width: 1fr;
+    height: auto;
+    max-height: 100%;
+    padding: 1 1;
+    border-left: tall $background 60%;
+}
+
+PopupComponent #file-tree {
+    height: 1fr;
+    width: 1fr;
+}
+
+PopupComponent #settings-panel {
+    height: auto;
+    width: 1fr;
+}
+
+PopupComponent #settings-title {
+    text-style: bold;
+    color: #a684e8;
+    padding: 0 0 1 0;
+}
+
+PopupComponent Select {
+    width: 100%;
+    margin-bottom: 1;
+}
+
+PopupComponent #toggle-row {
+    height: auto;
+    padding: 1 0 0 0;
+}
+
+PopupComponent #toggle-row Label {
+    width: 1fr;
+    color: $text-muted;
+}
+
+PopupComponent #auto-queue-toggle {
+    margin-top: 1;
+}
+
+NewFileOverlay {
+    align: center middle;
+}
+
+NewFileOverlay > Vertical {
+    width: 60;
+    height: auto;
+    max-height: 16;
+    border: thick $background 80%;
+    background: $surface;
+    padding: 1 2;
+}
+
+NewFileOverlay Input {
+    width: 100%;
+    margin-bottom: 1;
+}
+
+NewFileOverlay #new-file-title {
+    text-style: bold;
+    color: #a684e8;
+    padding: 0 0 1 0;
+}
+
+NewFileOverlay > Footer {
+    dock: bottom;
+    width: 100%;
+}

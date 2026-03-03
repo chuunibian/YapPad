@@ -1,0 +1,23 @@
+venv
+__pycache__
+Notes.txt
+
+# Prototyping files
+*prototype*
+
+# Audio files
+*.wav
+*.mp3
+*.flac
+*.ogg
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Gemini
+.gemini/

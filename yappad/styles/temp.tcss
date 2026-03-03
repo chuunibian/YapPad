@@ -1,0 +1,76 @@
+Screen {
+    layout: vertical;
+    background: $background; 
+}
+
+
+#master {
+    height: 1fr;
+    width: 100%;
+    border: round #444444; 
+    background: $surface;
+}
+
+#bottom-row {
+    height: 1fr;
+    layout: horizontal;
+}
+
+#right-column {
+    height: 100%,
+    width: 1fr
+}
+
+#user {
+    width: 3fr;
+    height: 100%;
+    border: round #444444;
+    background: $surface;
+}
+
+#transcript {
+    width: 2fr;
+    height: 100%;
+    border: round #444444;
+    background: $surface;
+}
+
+#bottom-bar {
+    dock: bottom;
+    height: 1;
+    width: 100%;
+}
+
+Footer {
+    dock: none;
+    width: 1fr; 
+}
+
+#status-indicator {
+    width: auto;
+    padding: 0 1;
+    background: $boost;
+    color: $text;
+}
+
+$primary: greenyellow;
+
+#master:focus {
+    border: round $primary;
+}
+
+#user:focus {
+    border: round $primary;
+}
+
+#transcript:focus {
+    border: round $primary;
+}
+
+#file-tree {
+    width: 1fr;
+}
+
+#md-viewer {
+    width: 1fr;
+}
