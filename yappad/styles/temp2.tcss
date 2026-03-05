@@ -1,4 +1,4 @@
-MarkdownLogScreen {
+Screen {
     layout: vertical;
     background: $background; 
 }
@@ -72,7 +72,7 @@ MarkdownLogScreen {
 
 #transcript-editor, #transcript-editor-loopback {
     width: 1fr;
-    height: 100%;
+    height: 1fr;
 }
 
 #transcript-loopback {
@@ -96,12 +96,7 @@ Footer {
     width: 1fr; 
 }
 
-#status-indicator {
-    width: auto;
-    padding: 0 1;
-    background: $boost;
-    color: $text;
-}
+
 
 $primary: #FF69B4;
 
