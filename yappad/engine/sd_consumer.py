@@ -22,7 +22,9 @@ class AudioCaptureT:
     '''
 
     def __init__(self, params: SDParam):
-        self.input_params = params
+        
+        self.current_params = params # other sd params to inputstream not including device
+        self.current_device = -1 # the device index used, -1 means default
 
         self._samples_queue = queue.Queue()
         self._chunks = []
@@ -38,6 +40,14 @@ class AudioCaptureT:
         
         self._samples_queue.put(indata.copy()) # need to copy since the buffer is internal and singular
 
+    def change_params(self, param: SDParam):
+        '''
+        Used to change current set of params used when recording
+        '''
+        self.current_params = param
+
+    def change_current_device(self, index):
+        self.current_device = index
 
     def stop_recording(self):
         self._recording_flag = False
@@ -70,9 +80,15 @@ class AudioCaptureT:
         # clear queue
         self._clear_queue()
 
-        # this will create a consumer thread
-        self._sdconsumer = sd.InputStream(samplerate=self.input_params.sample_rate, channels=self.input_params.channels, callback=self._callback)
+        stream_kwargs = dict(
+            samplerate=self.current_params.sample_rate,
+            channels=self.current_params.channels,
+            callback=self._callback
+        )
+        if self.current_device != -1:
+            stream_kwargs['device'] = self.current_device
 
+        self._sdconsumer = sd.InputStream(**stream_kwargs)
         # start the thread
         self._sdconsumer.start()
 
@@ -88,6 +104,3 @@ class AudioCaptureT:
                 self._samples_queue.get_nowait()
             except queue.Empty:
                 break
-
-
-

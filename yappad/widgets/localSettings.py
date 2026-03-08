@@ -2,7 +2,9 @@ from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widgets import Label, Select, Switch, Static, Input, Button
 
-from ..storage import get_documents_dir, set_documents_dir
+from ..core.storage import save_config
+from ..core.constants import WHISPER_MODELS, AUDIO_SOURCES, DETECT_MODES
+from pathlib import Path
 
 
 '''
@@ -21,10 +23,7 @@ from ..storage import get_documents_dir, set_documents_dir
 '''
 
 
-SOUNDDEVICES = [("Default Microphone", "default"), ("USB Headset", "usb"), ("Bluetooth", "bt")]
-WHISPER_MODELS = [("Tiny", "tiny"), ("Base", "base"), ("Small", "small"), ("Medium", "medium")]
-AUDIO_SOURCES = [("Microphone", "mic"), ("Device Audio", "device"), ("Both", "both")]
-DETECT_MODES = [("Auto Detect", "auto"), ("Manual Trigger", "manual")]
+SOUNDDEVICES = [("Default Microphone", "default"), ("USB Headset", "usb"), ("Bluetooth", "bt")]  # TODO: replace with real device enumeration
 
 
 class LocalSettings(Vertical):
@@ -35,7 +34,7 @@ class LocalSettings(Vertical):
         # Documents directory setting
         yield Label("Documents Directory")
         yield Input(
-            value=str(get_documents_dir()),
+            value=self.app.config.document_dir,
             placeholder="Path to documents folder",
             id="documents-dir-input",
         )
@@ -58,9 +57,13 @@ class LocalSettings(Vertical):
                 self.notify("Path cannot be empty", severity="error")
                 return
 
-            ok, err = set_documents_dir(new_path)
-            if ok:
-                self.notify(f"Documents directory set to: {new_path}")
-                self.notify("Previous files remain at their old location", severity="information")
-            else:
-                self.notify(err or "Failed to set directory", severity="error")
+            try:
+                Path(new_path).mkdir(parents=True, exist_ok=True)
+            except Exception as e:
+                self.notify(f"Invalid path: {e}", severity="error")
+                return
+
+            self.app.config.document_dir = new_path
+            save_config(self.app.config)
+            self.notify(f"Documents directory set to: {new_path}")
+            self.notify("Previous files remain at their old location", severity="information")

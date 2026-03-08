@@ -42,13 +42,13 @@ class LoopbackScreen(BaseScreen):
 
         if app.is_loopback_recording:
             loopback_widget.border_title = "🔴 Loopback Recording"
-            if app.loopback_recorder.get_recording_status() == False:
-                app.loopback_recorder.start_recording()
+            if app.loopback_engine.get_recording_status() == False:
+                app.loopback_engine.start_recording()
         else:
             loopback_widget.border_title = "⚪ Loopback Idle"
-            if app.loopback_recorder.get_recording_status() == True:
+            if app.loopback_engine.get_recording_status() == True:
                 
-                temp_audio = app.loopback_recorder.stop_recording()
+                temp_audio = app.loopback_engine.stop_recording()
                 app.audio_queue_loopback.put(temp_audio)
 
     # --------------------------------------- Transcript -------------------------------------------------

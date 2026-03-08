@@ -1,7 +1,7 @@
 from textual.widgets import DirectoryTree
 from pathlib import Path
 from typing import Iterable
-from ..messages import FileSelected
+from ..core.messages import FileSelected
 
 
 class LocalFileExplorer(DirectoryTree):

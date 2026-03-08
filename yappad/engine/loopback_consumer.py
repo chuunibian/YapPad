@@ -3,6 +3,7 @@ import pyaudiowpatch as pyaudio
 import queue
 import numpy as np
 from scipy.signal import resample
+from ..core.constants import WHISPER_SAMPLE_RATE
 
 @dataclass
 class PyAWParam:
@@ -24,6 +25,12 @@ class DeviceLoopbackCaptureT:
         # gets the default loopback device
         self._loopback = self.pyaudio_manager.get_default_wasapi_loopback()
 
+    def change_loopback_device(self, device_info):
+        '''
+        Swaps the internal loopback device dict.
+        device_info should be a pyaudiowpatch device info dict.
+        '''
+        self._loopback = device_info
 
 
 
@@ -58,10 +65,9 @@ class DeviceLoopbackCaptureT:
 
         # resample from device rate (e.g. 48kHz) to 16kHz for Whisper
         # this is for resampling temporary sorta can improve
-        WHISPER_SR = 16000
         device_sr = int(self._loopback['defaultSampleRate'])
-        if device_sr != WHISPER_SR:
-            num_samples_16k = int(len(audio) * WHISPER_SR / device_sr)
+        if device_sr != WHISPER_SAMPLE_RATE:
+            num_samples_16k = int(len(audio) * WHISPER_SAMPLE_RATE / device_sr)
             audio = resample(audio, num_samples_16k).astype(np.float32)
 
         return audio
@@ -98,6 +104,3 @@ class DeviceLoopbackCaptureT:
                 self._samples_queue.get_nowait()
             except queue.Empty:
                 break
-
-
-

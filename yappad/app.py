@@ -2,9 +2,13 @@ from .screens.main_screen import FullScreen
 from .screens.editor_screen import EditorScreen
 from .screens.mic_screen import MicScreen
 from .screens.loopback_screen import LoopbackScreen
-from .storage import get_documents_dir
-from .sdconsumer import AudioCaptureT, SDParam
-from .loopbackconsumer import DeviceLoopbackCaptureT, PyAWParam
+from .core.storage import load_config
+from .core.constants import DEFAULT_MIC_SAMPLE_RATE, DEFAULT_LOOPBACK_SAMPLE_RATE
+from .engine.sd_engine import sdEngine
+from .engine.sd_consumer import SDParam
+from .engine.loopback_engine import LoopbackEngine
+from .engine.loopback_consumer import PyAWParam
+from .engine.whisper_engine import TranscriptionEngine
 
 from textual.app import App
 from textual.command import Provider, Hit
@@ -12,8 +16,9 @@ from textual.theme import Theme
 from textual import work
 from textual.worker import get_current_worker
 
-from faster_whisper import WhisperModel
+from pathlib import Path
 import queue
+
 
 
 class ModeSwitchProvider(Provider):
@@ -56,8 +61,9 @@ class YapPad(App):
 
     def on_mount(self) -> None:
 
-        # Ensure documents directory exists on startup (also loads config)
-        get_documents_dir()
+        # Load config and ensure documents directory exists
+        self.config = load_config()
+        Path(self.config.document_dir).mkdir(parents=True, exist_ok=True)
 
         # Shared resources accessible from all screens using self.app
         self.is_recording = False
@@ -68,10 +74,10 @@ class YapPad(App):
         self.transcript_queue_mic = []
         self.transcript_queue_loopback = []
 
-        self.recorder = AudioCaptureT(SDParam(sample_rate=16000, channels=1, dtype="float32"))
-        self.loopback_recorder = DeviceLoopbackCaptureT(PyAWParam(sample_rate=48000, channels=1))
+        self.mic_engine = sdEngine(SDParam(sample_rate=DEFAULT_MIC_SAMPLE_RATE, channels=1, dtype="float32"))
+        self.loopback_engine = LoopbackEngine(PyAWParam(sample_rate=DEFAULT_LOOPBACK_SAMPLE_RATE, channels=1))
 
-        self.transcript_model = WhisperModel("base", device="cpu", compute_type="int8")
+        self.transcript_engine = TranscriptionEngine()
 
         # start transcription workers at app level
         self.transcription_loop_mic()
@@ -107,7 +113,7 @@ class YapPad(App):
         while not worker.is_cancelled:
             try:
                 clip = self.audio_queue_mic.get(timeout=3)
-                result, info = self.transcript_model.transcribe(clip)
+                result, info = self.transcript_engine.transcribe(clip)
                 text = " ".join(segment.text for segment in result)
                 self.call_from_thread(self._dispatch_mic_transcript, text)
             except queue.Empty:
@@ -119,7 +125,7 @@ class YapPad(App):
         while not worker.is_cancelled:
             try:
                 clip = self.audio_queue_loopback.get(timeout=3)
-                result, info = self.transcript_model.transcribe(clip)
+                result, info = self.transcript_engine.transcribe(clip)
                 text = " ".join(segment.text for segment in result)
                 self.call_from_thread(self._dispatch_loopback_transcript, text)
             except queue.Empty:

@@ -40,12 +40,12 @@ class MicScreen(BaseScreen):
 
         if app.is_recording:
             mic_widget.border_title = "🔴 Mic Recording"
-            if app.recorder.get_recording_status() == False:
-                app.recorder.start_recording()
+            if app.mic_engine.get_recording_status() == False:
+                app.mic_engine.start_recording()
         else:
             mic_widget.border_title = "⚪ Mic Idle"
-            if app.recorder.get_recording_status() == True:
-                temp_audio = app.recorder.stop_recording()
+            if app.mic_engine.get_recording_status() == True:
+                temp_audio = app.mic_engine.stop_recording()
                 app.audio_queue_mic.put(temp_audio)
 
     # --------------------------------------- Transcript -------------------------------------------------
