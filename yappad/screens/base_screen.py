@@ -42,12 +42,16 @@ class BaseScreen(Screen):
     # --------------------------------------- Actions -------------------------------------------------
 
     def action_temp_commit(self) -> None:
+        '''
+        For now this will commit the current text in the notes to the preview
+        keybind should be visible anywhere
+
+        '''
         user_input_widget = self.query_one("#user", TextArea)
         master_markdown_widget = self.query_one("#master", MasterMarkdown)
 
         if user_input_widget.text != "":
             master_markdown_widget.update(user_input_widget.text)
-            user_input_widget.text = ""
         else:
             self.notify("Nothing in user input area to append")
 

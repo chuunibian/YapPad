@@ -2,7 +2,7 @@ from .screens.main_screen import FullScreen
 from .screens.editor_screen import EditorScreen
 from .screens.mic_screen import MicScreen
 from .screens.loopback_screen import LoopbackScreen
-from .storage import get_data_dir
+from .storage import get_documents_dir
 from .sdconsumer import AudioCaptureT, SDParam
 from .loopbackconsumer import DeviceLoopbackCaptureT, PyAWParam
 
@@ -56,6 +56,9 @@ class YapPad(App):
 
     def on_mount(self) -> None:
 
+        # Ensure documents directory exists on startup (also loads config)
+        get_documents_dir()
+
         # Shared resources accessible from all screens using self.app
         self.is_recording = False
         self.is_loopback_recording = False
@@ -73,9 +76,6 @@ class YapPad(App):
         # start transcription workers at app level
         self.transcription_loop_mic()
         self.transcription_loop_loopback()
-
-        # ensure app data directory exists on startup
-        get_data_dir()
 
         default_theme = Theme(
             name="default",
@@ -146,9 +146,6 @@ class YapPad(App):
             screen.append_transcript_loopback(text)
 
 
-def main():
+if __name__ == "__main__":
     app = YapPad()
     app.run()
-
-if __name__ == "__main__":
-    main()

@@ -151,6 +151,12 @@ CustomTranscriptFooter {
 
 PopupComponent {
     align: center middle;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+NewFileOverlay {
+    align: center middle;
+    background: rgba(0, 0, 0, 0.6);
 }
 
 PopupComponent > Footer {
@@ -214,9 +220,6 @@ PopupComponent #auto-queue-toggle {
     margin-top: 1;
 }
 
-NewFileOverlay {
-    align: center middle;
-}
 
 NewFileOverlay > Vertical {
     width: 60;

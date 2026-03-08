@@ -7,7 +7,7 @@ from textual.binding import Binding
 from .localFileExplorer import LocalFileExplorer
 from .localSettings import LocalSettings
 from .newFileOverlay import NewFileOverlay
-from ..storage import get_data_dir
+from ..storage import get_documents_dir
 from ..messages import FileSelected
 
 
@@ -21,7 +21,7 @@ class PopupComponent(ModalScreen):
     ]
 
     def compose(self) -> ComposeResult:
-        data_dir = get_data_dir()
+        data_dir = get_documents_dir()
         with Horizontal(id="popup-body"):
             with Vertical(id="popup-left"):
                 yield LocalFileExplorer(str(data_dir), id="file-tree")

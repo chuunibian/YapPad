@@ -4,7 +4,7 @@ from textual.screen import ModalScreen
 from textual.widgets import Footer, Input, Label
 from textual.binding import Binding
 
-from ..storage import get_data_dir
+from ..storage import get_documents_dir
 from pathlib import Path
 
 
@@ -38,7 +38,7 @@ class NewFileOverlay(ModalScreen[Path | None]):
         if not filename.endswith(".md"):
             filename += ".md"
 
-        data_dir = get_data_dir()
+        data_dir = get_documents_dir()
         target_dir = data_dir / subdir if subdir else data_dir
         target_dir.mkdir(parents=True, exist_ok=True)
 

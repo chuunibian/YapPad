@@ -19,5 +19,5 @@ Notes.txt
 Thumbs.db
 .DS_Store
 
-# Gemini
-.gemini/
+# md
+*.md
