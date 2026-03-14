@@ -4,6 +4,7 @@ Notes.txt
 
 # Prototyping files
 *prototype*
+test_loopback_devices.py
 
 # Audio files
 *.wav

@@ -10,6 +10,13 @@ class LocalFileExplorer(DirectoryTree):
     def filter_paths(self, paths: Iterable[Path]) -> Iterable[Path]:
         return [path for path in paths if not path.name.startswith(".")]
 
+    def get_selected_path(self) -> Path | None:
+        """Return the path of the currently highlighted node, or None."""
+        node = self.cursor_node
+        if node is None or node.data is None:
+            return None
+        return node.data.path
+
     def on_directory_tree_file_selected(
         self, event: DirectoryTree.FileSelected
     ) -> None:

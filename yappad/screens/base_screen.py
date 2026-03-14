@@ -10,6 +10,7 @@ from textual.worker import get_current_worker
 from ..widgets.userInputArea import UserInputArea
 from ..widgets.markdownArea import MasterMarkdown
 from ..widgets.popupComponent import PopupComponent
+from ..core.messages import FileDeleted
 
 from pathlib import Path
 
@@ -54,6 +55,15 @@ class BaseScreen(Screen):
             master_markdown_widget.update(user_input_widget.text)
         else:
             self.notify("Nothing in user input area to append")
+
+    def on_file_deleted(self, message: FileDeleted) -> None:
+        """If the deleted file is currently open, clear the editor."""
+        if self.current_file_path and Path(self.current_file_path).resolve() == message.path.resolve():
+            user_input_widget = self.query_one("#user", TextArea)
+            user_input_widget.text = ""
+            self.current_file_path = ""
+            self.is_saved = True
+            self.notify("Open file was deleted", severity="warning")
 
     def action_open_popup(self) -> None:
         self.app.push_screen(PopupComponent(), callback=self._on_file_selected)

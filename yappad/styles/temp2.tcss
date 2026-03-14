@@ -245,3 +245,41 @@ NewFileOverlay > Footer {
     dock: bottom;
     width: 100%;
 }
+
+DeleteConfirmOverlay {
+    align: center middle;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+DeleteConfirmOverlay > Vertical {
+    width: 60;
+    height: auto;
+    max-height: 16;
+    border: thick $background 80%;
+    background: $surface;
+    padding: 1 2;
+}
+
+DeleteConfirmOverlay #delete-confirm-title {
+    text-style: bold;
+    color: #a684e8;
+    padding: 0 0 1 0;
+}
+
+DeleteConfirmOverlay #delete-confirm-target {
+    padding: 0 0 1 0;
+}
+
+DeleteConfirmOverlay #delete-confirm-warning {
+    color: #FFD700;
+    padding: 0 0 1 0;
+}
+
+DeleteConfirmOverlay #delete-confirm-hint {
+    color: $text-muted;
+}
+
+DeleteConfirmOverlay > Footer {
+    dock: bottom;
+    width: 100%;
+}

@@ -36,25 +36,28 @@ class LoopbackEngine():
         ]
         '''
         ui_ret = []
-        info = self._pyaudio.get_host_api_info_by_type(pyaudio.paWASAPI)
-        device_count = info.get('deviceCount', 0)
+        host_api_count = self._pyaudio.get_host_api_count()
+        
+        # fallback if WASAPI info unavailable
+        try:
+            wasapi_info = self._pyaudio.get_host_api_info_by_type(pyaudio.paWASAPI)
+        except OSError:
+            return ui_ret
 
-        for i in range(device_count):
-            device = self._pyaudio.get_device_info_by_host_api_device_index(info['index'], i)
-
-            # loopback devices are output devices (maxOutputChannels > 0)
-            if device.get('maxOutputChannels', 0) > 0:
-                try:
-                    loopback = self._pyaudio.get_loopback_device_info_by_device_index(device['index'])
+        for i in range(self._pyaudio.get_device_count()):
+            try:
+                device = self._pyaudio.get_device_info_by_index(i)
+                # Check if it's a WASAPI loopback device
+                if device.get("hostApi") == wasapi_info["index"] and device.get("isLoopbackDevice", False):
                     ui_ret.append({
-                        'index': loopback['index'],
-                        'name': loopback['name'],
-                        'channels': loopback['maxInputChannels'],
-                        'samplerate': int(loopback['defaultSampleRate']),
-                        'label': loopback['name']
+                        'index': device['index'],
+                        'name': device['name'],
+                        'channels': device['maxInputChannels'], # Loopbacks are inputs
+                        'samplerate': int(device['defaultSampleRate']),
+                        'label': device['name']
                     })
-                except Exception:
-                    continue
+            except Exception:
+                continue
 
         return ui_ret
 
@@ -77,18 +80,19 @@ class LoopbackEngine():
         Finds a loopback device info dict by name.
         Returns the full pyaudiowpatch device info dict or None.
         '''
-        info = self._pyaudio.get_host_api_info_by_type(pyaudio.paWASAPI)
-        device_count = info.get('deviceCount', 0)
+        try:
+            wasapi_info = self._pyaudio.get_host_api_info_by_type(pyaudio.paWASAPI)
+        except OSError:
+            return None
 
-        for i in range(device_count):
-            device = self._pyaudio.get_device_info_by_host_api_device_index(info['index'], i)
-            if device.get('maxOutputChannels', 0) > 0:
-                try:
-                    loopback = self._pyaudio.get_loopback_device_info_by_device_index(device['index'])
-                    if loopback['name'] == name:
-                        return loopback
-                except Exception:
-                    continue
+        for i in range(self._pyaudio.get_device_count()):
+            try:
+                device = self._pyaudio.get_device_info_by_index(i)
+                if device.get("hostApi") == wasapi_info["index"] and device.get("isLoopbackDevice", False):
+                    if device['name'] == name:
+                        return device
+            except Exception:
+                continue
 
         return None
 
