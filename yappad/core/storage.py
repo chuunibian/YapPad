@@ -18,11 +18,15 @@ def load_config() -> AppConfig:
     try:
         data = json.loads(_CONFIG_PATH.read_text(encoding="utf-8"))
     except (FileNotFoundError, json.JSONDecodeError):
-        _CONFIG_PATH.write_text(json.dumps(asdict(appconfig), indent=2), encoding="utf-8")
+        _CONFIG_PATH.write_text(
+            json.dumps(asdict(appconfig), indent=2), encoding="utf-8"
+        )
         return appconfig
 
     if not isinstance(data, dict):
-        _CONFIG_PATH.write_text(json.dumps(asdict(appconfig), indent=2), encoding="utf-8")
+        _CONFIG_PATH.write_text(
+            json.dumps(asdict(appconfig), indent=2), encoding="utf-8"
+        )
         return appconfig
 
     # load custom values, ignore unknown fields

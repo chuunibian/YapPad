@@ -5,7 +5,6 @@ from textual.widgets import Footer
 from textual.binding import Binding
 
 from .localFileExplorer import LocalFileExplorer
-from .localSettings import LocalSettings
 from .newFileOverlay import NewFileOverlay
 from .deleteConfirmOverlay import DeleteConfirmOverlay
 from pathlib import Path
@@ -13,7 +12,6 @@ from ..core.messages import FileSelected, FileDeleted
 
 
 class PopupComponent(ModalScreen):
-
     BINDINGS = [
         Binding("escape", "dismiss_popup", "Close", show=False),
         Binding("ctrl+o", "dismiss_popup", "Close"),
@@ -25,11 +23,8 @@ class PopupComponent(ModalScreen):
 
     def compose(self) -> ComposeResult:
         data_dir = Path(self.app.config.document_dir)
-        with Horizontal(id="popup-body"):
-            with Vertical(id="popup-left"):
-                yield LocalFileExplorer(str(data_dir), id="file-tree")
-            with Vertical(id="popup-right"):
-                yield LocalSettings(id="settings-panel")
+        with Vertical(id="explorer-container"):
+            yield LocalFileExplorer(str(data_dir), id="file-tree")
         yield Footer()
 
     def on_file_selected(self, message: FileSelected) -> None:
@@ -86,4 +81,3 @@ class PopupComponent(ModalScreen):
             self.notify(f"Deleted: {deleted_path.name}")
             # post FileDeleted so the screen can react if the open file was removed
             self.post_message(FileDeleted(deleted_path))
-

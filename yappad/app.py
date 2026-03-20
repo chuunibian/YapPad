@@ -9,6 +9,7 @@ from .engine.sd_consumer import SDParam
 from .engine.loopback_engine import LoopbackEngine
 from .engine.loopback_consumer import PyAWParam
 from .engine.whisper_engine import TranscriptionEngine
+from .widgets.loadingOverlay import LoadingOverlay
 
 from textual.app import App
 from textual.command import Provider, Hit
@@ -20,9 +21,9 @@ from pathlib import Path
 import queue
 
 
-
 class ModeSwitchProvider(Provider):
     """Injects mode-switching commands into the Command Palette."""
+
     async def search(self, query: str):
         matcher = self.matcher(query)
 
@@ -37,18 +38,19 @@ class ModeSwitchProvider(Provider):
             score = matcher.match(description)
             yield Hit(
                 score=score if score > 0 else 0.1,
-                match_display=matcher.highlight(description) if score > 0 else description,
+                match_display=matcher.highlight(description)
+                if score > 0
+                else description,
                 command=lambda m=mode: self.app.switch_mode(m),
-                help=f"Change layout to {mode}"
+                help=f"Change layout to {mode}",
             )
 
 
 class YapPad(App):
-
-    '''
+    """
     The app obj is the root comp
     basically acts as the global singleton containing stuff each screen needs
-    '''
+    """
 
     MODES = {
         "editor": EditorScreen,
@@ -58,6 +60,10 @@ class YapPad(App):
     }
 
     COMMANDS = App.COMMANDS | {ModeSwitchProvider}
+
+    def __init__(self, args):
+        super().__init__()
+        self.args = args  # cli args when cli run app
 
     def on_mount(self) -> None:
 
@@ -74,10 +80,16 @@ class YapPad(App):
         self.transcript_queue_mic = []
         self.transcript_queue_loopback = []
 
-        self.mic_engine = sdEngine(SDParam(sample_rate=DEFAULT_MIC_SAMPLE_RATE, channels=1, dtype="float32"))
-        self.loopback_engine = LoopbackEngine(PyAWParam(sample_rate=DEFAULT_LOOPBACK_SAMPLE_RATE, channels=1))
+        self.mic_engine = sdEngine(
+            SDParam(sample_rate=DEFAULT_MIC_SAMPLE_RATE, channels=1, dtype="float32")
+        )
+        self.loopback_engine = LoopbackEngine(
+            PyAWParam(sample_rate=DEFAULT_LOOPBACK_SAMPLE_RATE, channels=1)
+        )
 
-        self.transcript_engine = TranscriptionEngine()
+        # TODO change this to something more robust later!
+        if not self.args.slim:
+            self.transcript_engine = TranscriptionEngine()
 
         # start transcription workers at app level
         self.transcription_loop_mic()
@@ -130,7 +142,7 @@ class YapPad(App):
                 self.call_from_thread(self._dispatch_loopback_transcript, text)
             except queue.Empty:
                 continue
-    
+
     # so before transcription worker loop would append to a queue.Queue in which then the main UI thread needs to do wonky stuff on but it is not flexible
     # before transcription loop pushed to a thread safe queue.Queue which is an object from self (can only do this bc it is queue.Queue if it was [] then it is race cond)
     # now the transcription loop will just get the data and then call from thread to call a callback and that callback will RUN ON THE UI Thread but if we keep the footprint of this callback fun low then it should not block
@@ -142,16 +154,42 @@ class YapPad(App):
     def _dispatch_mic_transcript(self, text: str):
         """Route mic transcription to the active screen if it supports it."""
         screen = self.screen
-        if hasattr(screen, 'append_transcript_mic'):
+        if hasattr(screen, "append_transcript_mic"):
             screen.append_transcript_mic(text)
 
     def _dispatch_loopback_transcript(self, text: str):
         """Route loopback transcription to the active screen if it supports it."""
         screen = self.screen
-        if hasattr(screen, 'append_transcript_loopback'):
+        if hasattr(screen, "append_transcript_loopback"):
             screen.append_transcript_loopback(text)
 
+    # --------------------------------------- Whisper Model Switch Worker -------------------------------------------------
 
-if __name__ == "__main__":
-    app = YapPad()
-    app.run()
+    @work(thread=True)
+    def switch_whisper_model(self, config):
+        """Worker thread that switches the whisper model and dismisses the loading overlay via call_from_thread.
+        
+           For this the callback is a function that mutates the UI but in this case it is safe to mutate the UI in the callback
+           since the callback just pushes a task to main thread runtime to be done
+        
+        """
+        worker = get_current_worker()
+        try:
+            self.transcript_engine.switch_model(config)
+            if not worker.is_cancelled:
+                self.call_from_thread(self._on_model_switch_success, config.model_size_or_path)
+        except Exception as e:
+            if not worker.is_cancelled:
+                self.call_from_thread(self._on_model_switch_error, str(e))
+
+    def _on_model_switch_success(self, model_name: str) -> None:
+        """Called on UI thread after model switch succeeds."""
+        # Dismiss the loading overlay (it's the top screen on the stack)
+        if isinstance(self.screen, LoadingOverlay):
+            self.screen.dismiss(None)
+
+    def _on_model_switch_error(self, error_msg: str) -> None:
+        """Called on UI thread after model switch fails."""
+        if isinstance(self.screen, LoadingOverlay):
+            self.screen.dismiss(None)
+        self.notify(f"Model switch failed: {error_msg}", severity="error")

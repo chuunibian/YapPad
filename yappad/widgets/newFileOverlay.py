@@ -20,7 +20,9 @@ class NewFileOverlay(ModalScreen[Path | None]):
         with Vertical(id="new-file-body"):
             yield Label("New Note", id="new-file-title")
             yield Input(placeholder="Filename (e.g. my-notes.md)", id="new-file-name")
-            yield Input(placeholder="Subdirectory (optional, e.g. lectures)", id="new-file-path")
+            yield Input(
+                placeholder="Subdirectory (optional, e.g. lectures)", id="new-file-path"
+            )
         yield Footer()
 
     def action_create_file(self) -> None:

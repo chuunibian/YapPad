@@ -8,7 +8,7 @@
 
 from textual.widgets import Markdown
 
-class MasterMarkdown(Markdown):
 
+class MasterMarkdown(Markdown):
     BORDER_TITLE = "Preview"
     can_focus = True

@@ -23,8 +23,8 @@ class LocalFileExplorer(DirectoryTree):
         """Bubble up a FileSelected message when a file is clicked.
 
         would want the parent root to catch to then load the file and write to the user input area
-        
-        
+
+
         """
 
         self.post_message(FileSelected(event.path))

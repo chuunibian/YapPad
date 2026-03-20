@@ -164,25 +164,12 @@ PopupComponent > Footer {
     width: 100%;
 }
 
-PopupComponent > Horizontal {
-    width: 90;
+PopupComponent > #explorer-container {
+    width: 60;
     height: 80%;
     border: thick $background 80%;
     background: $surface;
-}
-
-PopupComponent #popup-left {
-    width: 1fr;
-    height: 1fr;
-    padding: 0 1;
-}
-
-PopupComponent #popup-right {
-    width: 1fr;
-    height: auto;
-    max-height: 100%;
-    padding: 1 1;
-    border-left: tall $background 60%;
+    padding: 1 2;
 }
 
 PopupComponent #file-tree {
@@ -190,33 +177,53 @@ PopupComponent #file-tree {
     width: 1fr;
 }
 
-PopupComponent #settings-panel {
+SettingsOverlay {
+    align: center middle;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+SettingsOverlay > #settings-container {
+    width: 60;
+    height: auto;
+    max-height: 80%;
+    border: thick $background 80%;
+    background: $surface;
+    padding: 1 2;
+    overflow-y: auto;
+}
+
+SettingsOverlay > Footer {
+    dock: bottom;
+    width: 100%;
+}
+
+SettingsOverlay #settings-panel {
     height: auto;
     width: 1fr;
 }
 
-PopupComponent #settings-title {
+SettingsOverlay #settings-title {
     text-style: bold;
     color: #a684e8;
     padding: 0 0 1 0;
 }
 
-PopupComponent Select {
+SettingsOverlay Select {
     width: 100%;
     margin-bottom: 1;
 }
 
-PopupComponent #toggle-row {
+SettingsOverlay #toggle-row {
     height: auto;
     padding: 1 0 0 0;
 }
 
-PopupComponent #toggle-row Label {
+SettingsOverlay #toggle-row Label {
     width: 1fr;
     color: $text-muted;
 }
 
-PopupComponent #auto-queue-toggle {
+SettingsOverlay #auto-queue-toggle {
     margin-top: 1;
 }
 
@@ -283,3 +290,90 @@ DeleteConfirmOverlay > Footer {
     dock: bottom;
     width: 100%;
 }
+
+/* ─── Quick Action Overlay ─── */
+
+QuickActionOverlay {
+    background: transparent;
+}
+
+.jump-badge {
+    width: auto;
+    height: 1;
+    background: #C45AFF;
+    color: white;
+    text-style: bold;
+    content-align: center middle;
+    position: absolute;
+}
+
+.jump-badge-row {
+    width: auto;
+    height: 1;
+    background: transparent;
+    color: white;
+    position: absolute;
+}
+
+.action-badge-row {
+    width: auto;
+    height: 1;
+    background: transparent;
+    color: white;
+    position: absolute;
+}
+
+#jump-info-bar {
+    dock: bottom;
+    height: 1;
+    width: 100%;
+    background: #C45AFF 80%;
+    hatch: right #C45AFF;
+}
+
+#jump-info-bar Label {
+    color: white;
+    text-style: bold;
+    background: #C45AFF;
+}
+
+#jump-dismiss-bar {
+    dock: bottom;
+    height: 1;
+    width: 100%;
+    background: transparent;
+}
+
+#jump-dismiss-bar Label {
+    color: $text-muted;
+}
+
+/* ─── Loading Overlay ─── */
+
+LoadingOverlay {
+    align: center middle;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+LoadingOverlay > Vertical {
+    width: 50;
+    height: auto;
+    max-height: 12;
+    border: thick $background 80%;
+    background: $surface;
+    padding: 1 2;
+    align: center middle;
+}
+
+LoadingOverlay #loading-message {
+    text-style: bold;
+    color: #a684e8;
+    padding: 0 0 1 0;
+    text-align: center;
+    width: 100%;
+}
+
+LoadingOverlay LoadingIndicator {
+    height: 3;
+    width: 100%;
+}

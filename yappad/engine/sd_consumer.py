@@ -3,47 +3,51 @@ import sounddevice as sd
 import queue
 import numpy as np
 
+
 @dataclass
 class SDParam:
     sample_rate: int
     channels: int
     dtype: str
 
+
 class AudioCaptureT:
+    """
+    Atp I think it is good enough for the inputstream thread to rep call the callback and then the queue hsould have data and then
+    when the stop rec is called just use that, I think no need to poll
 
-    '''
-        Atp I think it is good enough for the inputstream thread to rep call the callback and then the queue hsould have data and then
-        when the stop rec is called just use that, I think no need to poll
+    Also treating this as a create one and reuse so __init__ will not start the stream
+    This comes with implicaiton so need to avoid spamming, for like clips longer than 5 sec I htink it is ok
 
-        Also treating this as a create one and reuse so __init__ will not start the stream
-        This comes with implicaiton so need to avoid spamming, for like clips longer than 5 sec I htink it is ok
-    
-    
-    '''
+
+    """
 
     def __init__(self, params: SDParam):
-        
-        self.current_params = params # other sd params to inputstream not including device
-        self.current_device = -1 # the device index used, -1 means default
+
+        self.current_params = (
+            params  # other sd params to inputstream not including device
+        )
+        self.current_device = -1  # the device index used, -1 means default
 
         self._samples_queue = queue.Queue()
         self._chunks = []
-        self._recording_flag = False # on init rec should be false
+        self._recording_flag = False  # on init rec should be false
 
         self._sdconsumer = None
-
 
     # callback for the sd lbrary consumer which will input whatever it consumed into here
     def _callback(self, indata, frames, time, status):
         if status:
             print(status)
-        
-        self._samples_queue.put(indata.copy()) # need to copy since the buffer is internal and singular
+
+        self._samples_queue.put(
+            indata.copy()
+        )  # need to copy since the buffer is internal and singular
 
     def change_params(self, param: SDParam):
-        '''
+        """
         Used to change current set of params used when recording
-        '''
+        """
         self.current_params = param
 
     def change_current_device(self, index):
@@ -67,14 +71,12 @@ class AudioCaptureT:
 
         return np.concatenate(chunks, axis=0).flatten()
 
-
-    
     def start_recording(self):
-        '''
+        """
         Start recording should make the _sdconsumer and then start the thread to do the processing
-        
+
         to avoid issues need to check if it is currently already recording, leaving that up to UI
-        '''
+        """
         self._recording_flag = True
 
         # clear queue
@@ -83,19 +85,17 @@ class AudioCaptureT:
         stream_kwargs = dict(
             samplerate=self.current_params.sample_rate,
             channels=self.current_params.channels,
-            callback=self._callback
+            callback=self._callback,
         )
         if self.current_device != -1:
-            stream_kwargs['device'] = self.current_device
+            stream_kwargs["device"] = self.current_device
 
         self._sdconsumer = sd.InputStream(**stream_kwargs)
         # start the thread
         self._sdconsumer.start()
 
-
     def get_recording_status(self):
         return self._recording_flag
-    
 
     # clears queue
     def _clear_queue(self):
