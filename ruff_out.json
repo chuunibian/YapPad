@@ -1,0 +1,652 @@
+﻿[
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 30,
+      "row": 1
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\core\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 21,
+      "row": 1
+    },
+    "message": "`.models.AppConfig` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "noqa_row": 1,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 50,
+      "row": 1
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\core\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 32,
+      "row": 1
+    },
+    "message": "`.models.WhisperModelConfig` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "noqa_row": 1,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 70,
+      "row": 1
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\core\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 52,
+      "row": 1
+    },
+    "message": "`.models.MarkdownCommitNode` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "noqa_row": 1,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F403",
+    "end_location": {
+      "column": 25,
+      "row": 2
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\core\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 1,
+      "row": 2
+    },
+    "message": "`from .constants import *` used; unable to detect undefined names",
+    "noqa_row": 2,
+    "url": "https://docs.astral.sh/ruff/rules/undefined-local-with-import-star"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 33,
+      "row": 3
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\core\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 22,
+      "row": 3
+    },
+    "message": "`.storage.load_config` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "noqa_row": 3,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 46,
+      "row": 3
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\core\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 35,
+      "row": 3
+    },
+    "message": "`.storage.save_config` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "noqa_row": 3,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 43,
+      "row": 4
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\core\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 25,
+      "row": 4
+    },
+    "message": "`.exceptions.AppConfigLoadError` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 35,
+      "row": 5
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\core\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 23,
+      "row": 5
+    },
+    "message": "`.messages.FileSelected` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "noqa_row": 5,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 32,
+      "row": 1
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\engine\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 24,
+      "row": 1
+    },
+    "message": "`.sd_engine.sdEngine` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "noqa_row": 1,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 44,
+      "row": 2
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\engine\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 30,
+      "row": 2
+    },
+    "message": "`.loopback_engine.LoopbackEngine` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "noqa_row": 2,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 48,
+      "row": 3
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\engine\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 29,
+      "row": 3
+    },
+    "message": "`.whisper_engine.TranscriptionEngine` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "noqa_row": 3,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 33,
+      "row": 4
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\engine\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 26,
+      "row": 4
+    },
+    "message": "`.sd_consumer.SDParam` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 41,
+      "row": 5
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\engine\\__init__.py",
+    "fix": null,
+    "location": {
+      "column": 32,
+      "row": 5
+    },
+    "message": "`.loopback_consumer.PyAWParam` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "noqa_row": 5,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F841",
+    "end_location": {
+      "column": 23,
+      "row": 36
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\engine\\loopback_engine.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 26,
+            "row": 36
+          },
+          "location": {
+            "column": 9,
+            "row": 36
+          }
+        }
+      ],
+      "message": "Remove assignment to unused variable `host_api_count`"
+    },
+    "location": {
+      "column": 9,
+      "row": 36
+    },
+    "message": "Local variable `host_api_count` is assigned to but never used",
+    "noqa_row": 36,
+    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+  },
+  {
+    "cell": null,
+    "code": "E712",
+    "end_location": {
+      "column": 40,
+      "row": 110
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\screens\\base_screen.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "mic_tabs.display",
+          "end_location": {
+            "column": 40,
+            "row": 110
+          },
+          "location": {
+            "column": 16,
+            "row": 110
+          }
+        }
+      ],
+      "message": "Replace with `mic_tabs.display`"
+    },
+    "location": {
+      "column": 16,
+      "row": 110
+    },
+    "message": "Avoid equality comparisons to `True`; use `mic_tabs.display:` for truth checks",
+    "noqa_row": 110,
+    "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+  },
+  {
+    "cell": null,
+    "code": "E712",
+    "end_location": {
+      "column": 73,
+      "row": 110
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\screens\\base_screen.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "loopback_tabs.display",
+          "end_location": {
+            "column": 73,
+            "row": 110
+          },
+          "location": {
+            "column": 44,
+            "row": 110
+          }
+        }
+      ],
+      "message": "Replace with `loopback_tabs.display`"
+    },
+    "location": {
+      "column": 44,
+      "row": 110
+    },
+    "message": "Avoid equality comparisons to `True`; use `loopback_tabs.display:` for truth checks",
+    "noqa_row": 110,
+    "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+  },
+  {
+    "cell": null,
+    "code": "E712",
+    "end_location": {
+      "column": 42,
+      "row": 120
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\screens\\base_screen.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "master_preview.display",
+          "end_location": {
+            "column": 42,
+            "row": 120
+          },
+          "location": {
+            "column": 12,
+            "row": 120
+          }
+        }
+      ],
+      "message": "Replace with `master_preview.display`"
+    },
+    "location": {
+      "column": 12,
+      "row": 120
+    },
+    "message": "Avoid equality comparisons to `True`; use `master_preview.display:` for truth checks",
+    "noqa_row": 120,
+    "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+  },
+  {
+    "cell": null,
+    "code": "E712",
+    "end_location": {
+      "column": 79,
+      "row": 120
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\screens\\base_screen.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "is_transcript_row_visible",
+          "end_location": {
+            "column": 79,
+            "row": 120
+          },
+          "location": {
+            "column": 46,
+            "row": 120
+          }
+        }
+      ],
+      "message": "Replace with `is_transcript_row_visible`"
+    },
+    "location": {
+      "column": 46,
+      "row": 120
+    },
+    "message": "Avoid equality comparisons to `True`; use `is_transcript_row_visible:` for truth checks",
+    "noqa_row": 120,
+    "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+  },
+  {
+    "cell": null,
+    "code": "E712",
+    "end_location": {
+      "column": 67,
+      "row": 58
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\screens\\loopback_screen.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "not app.loopback_engine.get_recording_status()",
+          "end_location": {
+            "column": 67,
+            "row": 58
+          },
+          "location": {
+            "column": 16,
+            "row": 58
+          }
+        }
+      ],
+      "message": "Replace with `not app.loopback_engine.get_recording_status()`"
+    },
+    "location": {
+      "column": 16,
+      "row": 58
+    },
+    "message": "Avoid equality comparisons to `False`; use `not app.loopback_engine.get_recording_status():` for false checks",
+    "noqa_row": 58,
+    "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+  },
+  {
+    "cell": null,
+    "code": "E712",
+    "end_location": {
+      "column": 66,
+      "row": 61
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\screens\\loopback_screen.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "app.loopback_engine.get_recording_status()",
+          "end_location": {
+            "column": 66,
+            "row": 61
+          },
+          "location": {
+            "column": 16,
+            "row": 61
+          }
+        }
+      ],
+      "message": "Replace with `app.loopback_engine.get_recording_status()`"
+    },
+    "location": {
+      "column": 16,
+      "row": 61
+    },
+    "message": "Avoid equality comparisons to `True`; use `app.loopback_engine.get_recording_status():` for truth checks",
+    "noqa_row": 61,
+    "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+  },
+  {
+    "cell": null,
+    "code": "E712",
+    "end_location": {
+      "column": 62,
+      "row": 75
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\screens\\main_screen.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "not app.mic_engine.get_recording_status()",
+          "end_location": {
+            "column": 62,
+            "row": 75
+          },
+          "location": {
+            "column": 16,
+            "row": 75
+          }
+        }
+      ],
+      "message": "Replace with `not app.mic_engine.get_recording_status()`"
+    },
+    "location": {
+      "column": 16,
+      "row": 75
+    },
+    "message": "Avoid equality comparisons to `False`; use `not app.mic_engine.get_recording_status():` for false checks",
+    "noqa_row": 75,
+    "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+  },
+  {
+    "cell": null,
+    "code": "E712",
+    "end_location": {
+      "column": 61,
+      "row": 78
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\screens\\main_screen.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "app.mic_engine.get_recording_status()",
+          "end_location": {
+            "column": 61,
+            "row": 78
+          },
+          "location": {
+            "column": 16,
+            "row": 78
+          }
+        }
+      ],
+      "message": "Replace with `app.mic_engine.get_recording_status()`"
+    },
+    "location": {
+      "column": 16,
+      "row": 78
+    },
+    "message": "Avoid equality comparisons to `True`; use `app.mic_engine.get_recording_status():` for truth checks",
+    "noqa_row": 78,
+    "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+  },
+  {
+    "cell": null,
+    "code": "E712",
+    "end_location": {
+      "column": 67,
+      "row": 89
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\screens\\main_screen.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "not app.loopback_engine.get_recording_status()",
+          "end_location": {
+            "column": 67,
+            "row": 89
+          },
+          "location": {
+            "column": 16,
+            "row": 89
+          }
+        }
+      ],
+      "message": "Replace with `not app.loopback_engine.get_recording_status()`"
+    },
+    "location": {
+      "column": 16,
+      "row": 89
+    },
+    "message": "Avoid equality comparisons to `False`; use `not app.loopback_engine.get_recording_status():` for false checks",
+    "noqa_row": 89,
+    "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+  },
+  {
+    "cell": null,
+    "code": "E712",
+    "end_location": {
+      "column": 66,
+      "row": 92
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\screens\\main_screen.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "app.loopback_engine.get_recording_status()",
+          "end_location": {
+            "column": 66,
+            "row": 92
+          },
+          "location": {
+            "column": 16,
+            "row": 92
+          }
+        }
+      ],
+      "message": "Replace with `app.loopback_engine.get_recording_status()`"
+    },
+    "location": {
+      "column": 16,
+      "row": 92
+    },
+    "message": "Avoid equality comparisons to `True`; use `app.loopback_engine.get_recording_status():` for truth checks",
+    "noqa_row": 92,
+    "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+  },
+  {
+    "cell": null,
+    "code": "E712",
+    "end_location": {
+      "column": 62,
+      "row": 59
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\screens\\mic_screen.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "not app.mic_engine.get_recording_status()",
+          "end_location": {
+            "column": 62,
+            "row": 59
+          },
+          "location": {
+            "column": 16,
+            "row": 59
+          }
+        }
+      ],
+      "message": "Replace with `not app.mic_engine.get_recording_status()`"
+    },
+    "location": {
+      "column": 16,
+      "row": 59
+    },
+    "message": "Avoid equality comparisons to `False`; use `not app.mic_engine.get_recording_status():` for false checks",
+    "noqa_row": 59,
+    "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+  },
+  {
+    "cell": null,
+    "code": "E712",
+    "end_location": {
+      "column": 61,
+      "row": 62
+    },
+    "filename": "C:\\Users\\iAust\\Documents\\YapPad\\yappad\\screens\\mic_screen.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "app.mic_engine.get_recording_status()",
+          "end_location": {
+            "column": 61,
+            "row": 62
+          },
+          "location": {
+            "column": 16,
+            "row": 62
+          }
+        }
+      ],
+      "message": "Replace with `app.mic_engine.get_recording_status()`"
+    },
+    "location": {
+      "column": 16,
+      "row": 62
+    },
+    "message": "Avoid equality comparisons to `True`; use `app.mic_engine.get_recording_status():` for truth checks",
+    "noqa_row": 62,
+    "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+  }
+]

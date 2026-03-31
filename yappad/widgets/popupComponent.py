@@ -1,32 +1,32 @@
 from textual.app import ComposeResult
-from textual.containers import Horizontal, Vertical
+from textual.containers import Vertical
 from textual.screen import ModalScreen
 from textual.widgets import Footer
 from textual.binding import Binding
 
 from .localFileExplorer import LocalFileExplorer
-from .localSettings import LocalSettings
 from .newFileOverlay import NewFileOverlay
-from ..storage import get_data_dir
-from ..messages import FileSelected
+from .newFolderOverlay import NewFolderOverlay
+from .deleteConfirmOverlay import DeleteConfirmOverlay
+from pathlib import Path
+from ..core.messages import FileSelected, FileDeleted
 
 
 class PopupComponent(ModalScreen):
-
     BINDINGS = [
         Binding("escape", "dismiss_popup", "Close", show=False),
         Binding("ctrl+o", "dismiss_popup", "Close"),
         Binding("ctrl+q", "quit", "Quit App"),
         Binding("ctrl+n", "new_file", "New Note"),
+        Binding("ctrl+f", "new_folder", "New Folder"),
+        Binding("delete", "delete_selected", "Delete", show=True),
+        Binding("ctrl+d", "delete_selected", "Delete", show=False),
     ]
 
     def compose(self) -> ComposeResult:
-        data_dir = get_data_dir()
-        with Horizontal(id="popup-body"):
-            with Vertical(id="popup-left"):
-                yield LocalFileExplorer(str(data_dir), id="file-tree")
-            with Vertical(id="popup-right"):
-                yield LocalSettings(id="settings-panel")
+        data_dir = Path(self.app.config.document_dir)
+        with Vertical(id="explorer-container"):
+            yield LocalFileExplorer(str(data_dir), id="file-tree")
         yield Footer()
 
     def on_file_selected(self, message: FileSelected) -> None:
@@ -42,13 +42,72 @@ class PopupComponent(ModalScreen):
         self.app.exit()
 
     def action_new_file(self) -> None:
-        """Open the new file overlay."""
-        self.app.push_screen(NewFileOverlay(), callback=self._on_new_file_created)
+        """Open the new file overlay, creating in the currently selected directory."""
+        file_tree = self.query_one("#file-tree", LocalFileExplorer)
+        selected = file_tree.get_selected_path()
+
+        if selected is not None:
+            # if a file is selected, use its parent directory
+            target_dir = selected if selected.is_dir() else selected.parent
+        else:
+            # fallback to root documents dir
+            target_dir = Path(self.app.config.document_dir)
+
+        self.app.push_screen(NewFileOverlay(target_dir), callback=self._on_new_file_created)
 
     def _on_new_file_created(self, path) -> None:
         """Called when the new file overlay dismisses."""
         if path is not None:
-            # refresh the file tree so the new file shows up
             file_tree = self.query_one("#file-tree", LocalFileExplorer)
             file_tree.reload()
             self.notify(f"Created: {path.name}")
+
+    def action_new_folder(self) -> None:
+        """Open the new folder overlay, creating inside the currently selected directory."""
+        file_tree = self.query_one("#file-tree", LocalFileExplorer)
+        selected = file_tree.get_selected_path()
+
+        if selected is not None:
+            target_dir = selected if selected.is_dir() else selected.parent
+        else:
+            target_dir = Path(self.app.config.document_dir)
+
+        self.app.push_screen(NewFolderOverlay(target_dir), callback=self._on_new_folder_created)
+
+    def _on_new_folder_created(self, path) -> None:
+        """Called when the new folder overlay dismisses."""
+        if path is not None:
+            file_tree = self.query_one("#file-tree", LocalFileExplorer)
+            file_tree.reload()
+            self.notify(f"Created folder: {path.name}")
+
+    def action_delete_selected(self) -> None:
+        """Delete the currently highlighted file or folder after confirmation."""
+        file_tree = self.query_one("#file-tree", LocalFileExplorer)
+        target = file_tree.get_selected_path()
+
+        if target is None:
+            self.notify("Nothing selected to delete", severity="warning")
+            return
+
+        # don't allow deleting the root document directory
+        data_dir = Path(self.app.config.document_dir).resolve()
+        if target.resolve() == data_dir:
+            self.notify("Cannot delete the root documents folder", severity="error")
+            return
+
+        # capture the target path for the callback closure
+        deleted_path = target
+        self.app.push_screen(
+            DeleteConfirmOverlay(target),
+            callback=lambda result: self._on_delete_confirmed(result, deleted_path),
+        )
+
+    def _on_delete_confirmed(self, result, deleted_path: Path) -> None:
+        """Called when the delete overlay dismisses."""
+        if result is True:
+            file_tree = self.query_one("#file-tree", LocalFileExplorer)
+            file_tree.reload()
+            self.notify(f"Deleted: {deleted_path.name}")
+            # post FileDeleted so the screen can react if the open file was removed
+            self.post_message(FileDeleted(deleted_path))

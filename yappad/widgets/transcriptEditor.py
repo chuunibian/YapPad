@@ -1,12 +1,10 @@
 from textual.app import ComposeResult
-from textual.containers import Horizontal, Vertical
-from textual.reactive import reactive
-from textual.widgets import Label
+from textual.containers import Vertical
 from .transcriptInputArea import TranscriptRichLog
 from .customTranscriptFooter import CustomTranscriptFooter
 
-class TranscriptEditor(Vertical):
 
+class TranscriptEditor(Vertical):
     # to create it via caller set css id
     def __init__(self, transcript_id: str = "transcript", **kwargs):
         super().__init__(**kwargs)

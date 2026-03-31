@@ -9,3 +9,11 @@ class FileSelected(Message):
     def __init__(self, path: Path) -> None:
         super().__init__()
         self.path = path
+
+
+class FileDeleted(Message):
+    """Posted when a file or directory is deleted."""
+
+    def __init__(self, path: Path) -> None:
+        super().__init__()
+        self.path = path
