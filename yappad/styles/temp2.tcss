@@ -45,11 +45,11 @@ Screen {
 
 #right-column {
     height: 100%;
-    width: 1fr;
+    width: 2fr;
 }
 
 #user {
-    width: 1fr;
+    width: 3fr;
     height: 100%;
     border: round #444444;
     border-title-color: #a684e8;
@@ -57,12 +57,11 @@ Screen {
     margin-right: 1;
 }
 
-#transcript {
-    width: 100%;
+/* ─── Transcript Tabs ─── */
+
+#mic-tabs, #loopback-tabs {
+    width: 1fr;
     height: 1fr;
-    border: round #444444;
-    border-title-color: #a684e8;
-    background: transparent;
 }
 
 #transcript-row {
@@ -70,17 +69,19 @@ Screen {
     width: 100%;
 }
 
-#transcript-editor, #transcript-editor-loopback {
+TranscriptTabs {
+    height: 1fr;
     width: 1fr;
+}
+
+TranscriptTabs TabbedContent {
     height: 1fr;
 }
 
-#transcript-loopback {
+TranscriptTabs .clip-text {
     width: 100%;
     height: 1fr;
-    border: round #444444;
-    border-title-color: #a684e8;
-    background: transparent;
+    padding: 1;
 }
 
 #bottom-bar {
@@ -112,17 +113,7 @@ $primary: #FF69B4;
     border-title-style: b;
 }
 
-#transcript:focus {
-    border: round $primary;
-    border-title-color: white;
-    border-title-style: b;
-}
 
-#transcript-loopback:focus {
-    border: round $primary;
-    border-title-color: white;
-    border-title-style: b;
-}
 
 #file-tree {
     width: 1fr;
@@ -137,17 +128,7 @@ TextArea, RichLog {
     border: none;
 }
 
-CustomTranscriptFooter {
-    height: 1;
-    width: 100%;
-    padding: 0 1;
-    background: $boost;
-}
 
-#queue-indicator {
-    width: auto;
-    color: $text-muted;
-}
 
 PopupComponent {
     align: center middle;
@@ -183,12 +164,12 @@ SettingsOverlay {
 }
 
 SettingsOverlay > #settings-container {
-    width: 60;
+    width: 64;
     height: auto;
     max-height: 80%;
-    border: thick $background 80%;
+    border: round #444444;
     background: $surface;
-    padding: 1 2;
+    padding: 2 3;
     overflow-y: auto;
 }
 
@@ -205,7 +186,15 @@ SettingsOverlay #settings-panel {
 SettingsOverlay #settings-title {
     text-style: bold;
     color: #a684e8;
+    text-align: center;
+    width: 100%;
     padding: 0 0 1 0;
+}
+
+SettingsOverlay Label {
+    padding: 1 0 0 0;
+    color: $text-muted;
+    text-style: italic;
 }
 
 SettingsOverlay Select {
@@ -213,18 +202,39 @@ SettingsOverlay Select {
     margin-bottom: 1;
 }
 
+SettingsOverlay Button {
+    width: auto;
+    min-width: 20;
+    margin: 1 0 0 0;
+}
+
+SettingsOverlay Input {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+SettingsOverlay #whisper-settings-container {
+    height: auto;
+    margin-top: 1;
+    padding: 1 1;
+    border: round #333333;
+}
+
 SettingsOverlay #toggle-row {
     height: auto;
+    layout: horizontal;
     padding: 1 0 0 0;
+    align: left middle;
 }
 
 SettingsOverlay #toggle-row Label {
     width: 1fr;
     color: $text-muted;
+    padding: 0;
 }
 
 SettingsOverlay #auto-queue-toggle {
-    margin-top: 1;
+    margin: 0 0 0 1;
 }
 
 
@@ -232,7 +242,7 @@ NewFileOverlay > Vertical {
     width: 60;
     height: auto;
     max-height: 16;
-    border: thick $background 80%;
+    border: round #444444;
     background: $surface;
     padding: 1 2;
 }
@@ -248,7 +258,49 @@ NewFileOverlay #new-file-title {
     padding: 0 0 1 0;
 }
 
+NewFileOverlay #new-file-location {
+    color: $text-muted;
+    text-style: italic;
+    padding: 0 0 1 0;
+}
+
 NewFileOverlay > Footer {
+    dock: bottom;
+    width: 100%;
+}
+
+NewFolderOverlay {
+    align: center middle;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+NewFolderOverlay > Vertical {
+    width: 60;
+    height: auto;
+    max-height: 16;
+    border: round #444444;
+    background: $surface;
+    padding: 1 2;
+}
+
+NewFolderOverlay Input {
+    width: 100%;
+    margin-bottom: 1;
+}
+
+NewFolderOverlay #new-folder-title {
+    text-style: bold;
+    color: #a684e8;
+    padding: 0 0 1 0;
+}
+
+NewFolderOverlay #new-folder-location {
+    color: $text-muted;
+    text-style: italic;
+    padding: 0 0 1 0;
+}
+
+NewFolderOverlay > Footer {
     dock: bottom;
     width: 100%;
 }

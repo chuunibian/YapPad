@@ -1,5 +1,5 @@
 import sounddevice as sd
-from .sd_consumer import AudioCaptureT, SDParam
+from .sd_consumer import AudioCaptureT
 
 
 class sdEngine:

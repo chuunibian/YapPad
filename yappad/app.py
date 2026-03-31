@@ -1,7 +1,4 @@
-from .screens.main_screen import FullScreen
-from .screens.editor_screen import EditorScreen
-from .screens.mic_screen import MicScreen
-from .screens.loopback_screen import LoopbackScreen
+from .screens.main_screen import MainScreen
 from .core.storage import load_config
 from .core.constants import DEFAULT_MIC_SAMPLE_RATE, DEFAULT_LOOPBACK_SAMPLE_RATE
 from .engine.sd_engine import sdEngine
@@ -10,9 +7,9 @@ from .engine.loopback_engine import LoopbackEngine
 from .engine.loopback_consumer import PyAWParam
 from .engine.whisper_engine import TranscriptionEngine
 from .widgets.loadingOverlay import LoadingOverlay
+from .core.models import TranscriptClip
 
 from textual.app import App
-from textual.command import Provider, Hit
 from textual.theme import Theme
 from textual import work
 from textual.worker import get_current_worker
@@ -21,45 +18,11 @@ from pathlib import Path
 import queue
 
 
-class ModeSwitchProvider(Provider):
-    """Injects mode-switching commands into the Command Palette."""
-
-    async def search(self, query: str):
-        matcher = self.matcher(query)
-
-        targets = [
-            ("editor", "Switch to Editor"),
-            ("mic", "Switch to Mic Mode"),
-            ("loopback", "Switch to Loopback Mode"),
-            ("full", "Switch to Full Mode"),
-        ]
-
-        for mode, description in targets:
-            score = matcher.match(description)
-            yield Hit(
-                score=score if score > 0 else 0.1,
-                match_display=matcher.highlight(description)
-                if score > 0
-                else description,
-                command=lambda m=mode: self.app.switch_mode(m),
-                help=f"Change layout to {mode}",
-            )
-
-
 class YapPad(App):
     """
     The app obj is the root comp
     basically acts as the global singleton containing stuff each screen needs
     """
-
-    MODES = {
-        "editor": EditorScreen,
-        "mic": MicScreen,
-        "loopback": LoopbackScreen,
-        "full": FullScreen,
-    }
-
-    COMMANDS = App.COMMANDS | {ModeSwitchProvider}
 
     def __init__(self, args):
         super().__init__()
@@ -77,8 +40,6 @@ class YapPad(App):
 
         self.audio_queue_mic = queue.Queue()
         self.audio_queue_loopback = queue.Queue()
-        self.transcript_queue_mic = []
-        self.transcript_queue_loopback = []
 
         self.mic_engine = sdEngine(
             SDParam(sample_rate=DEFAULT_MIC_SAMPLE_RATE, channels=1, dtype="float32")
@@ -115,7 +76,19 @@ class YapPad(App):
         self.register_theme(default_theme)
         self.theme = "default"
 
-        self.switch_mode("editor")
+        self.push_screen(MainScreen())
+
+        # startup file behavior
+        if self.args.resume and self.config.last_opened_file:
+            last_path = Path(self.config.last_opened_file)
+            if last_path.exists():
+                self.screen.load_file(last_path)
+            else:
+                self.notify("Last file no longer exists, opening file picker", severity="warning")
+                self.screen.action_open_popup()
+        else:
+            # no resume flag — open file picker so user selects a file
+            self.screen.action_open_popup()
 
     # --------------------------------------- Transcription Workers -------------------------------------------------
 
@@ -127,7 +100,8 @@ class YapPad(App):
                 clip = self.audio_queue_mic.get(timeout=3)
                 result, info = self.transcript_engine.transcribe(clip)
                 text = " ".join(segment.text for segment in result)
-                self.call_from_thread(self._dispatch_mic_transcript, text)
+                clip = TranscriptClip(text=text)
+                self.call_from_thread(self._dispatch_mic_transcript, clip)
             except queue.Empty:
                 continue
 
@@ -139,7 +113,8 @@ class YapPad(App):
                 clip = self.audio_queue_loopback.get(timeout=3)
                 result, info = self.transcript_engine.transcribe(clip)
                 text = " ".join(segment.text for segment in result)
-                self.call_from_thread(self._dispatch_loopback_transcript, text)
+                clip = TranscriptClip(text=text)
+                self.call_from_thread(self._dispatch_loopback_transcript, clip)
             except queue.Empty:
                 continue
 
@@ -151,17 +126,17 @@ class YapPad(App):
     # so then the event manager that handles the transfer transcript to user input will copy and paste and then blank out the transcript and then if queue len > 1 then pop and use else leave it blank
 
     # need dispatch checker since not every screen has the callback function for respective recorder
-    def _dispatch_mic_transcript(self, text: str):
+    def _dispatch_mic_transcript(self, clip: TranscriptClip):
         """Route mic transcription to the active screen if it supports it."""
         screen = self.screen
         if hasattr(screen, "append_transcript_mic"):
-            screen.append_transcript_mic(text)
+            screen.append_transcript_mic(clip)
 
-    def _dispatch_loopback_transcript(self, text: str):
+    def _dispatch_loopback_transcript(self, clip: TranscriptClip):
         """Route loopback transcription to the active screen if it supports it."""
         screen = self.screen
         if hasattr(screen, "append_transcript_loopback"):
-            screen.append_transcript_loopback(text)
+            screen.append_transcript_loopback(clip)
 
     # --------------------------------------- Whisper Model Switch Worker -------------------------------------------------
 

@@ -1,18 +1,17 @@
-from textual.app import ComposeResult
-from textual.widgets import Footer, TextArea
-from textual.containers import Horizontal
+from textual.widgets import TextArea
+from textual.containers import Container
 from textual import on, work
 from textual.binding import Binding
 from textual.screen import Screen
 from textual.reactive import reactive
 from textual.worker import get_current_worker
 
-from ..widgets.userInputArea import UserInputArea
 from ..widgets.markdownArea import MasterMarkdown
 from ..widgets.popupComponent import PopupComponent
 from ..widgets.settingsOverlay import SettingsOverlay
 from ..widgets.quickActionOverlay import QuickActionOverlay, QuickAction, JumpTarget
 from ..core.messages import FileDeleted
+from ..core.storage import save_config
 
 from pathlib import Path
 
@@ -48,17 +47,25 @@ class BaseScreen(Screen):
 
     def action_temp_commit(self) -> None:
         """
-        For now this will commit the current text in the notes to the preview
-        keybind should be visible anywhere
-
+        Toggle preview: if hidden, commit text, hide editor, and show preview.
+        If visible, hide preview and show editor again.
         """
+        master = self.query_one("#master", MasterMarkdown)
         user_input_widget = self.query_one("#user", TextArea)
-        master_markdown_widget = self.query_one("#master", MasterMarkdown)
 
-        if user_input_widget.text != "":
-            master_markdown_widget.update(user_input_widget.text)
+        if not master.display:
+            # hide editor, show preview
+            if user_input_widget.text != "":
+                 master.document.update(user_input_widget.text)
+            user_input_widget.display = False
+            master.display = True
         else:
-            self.notify("Nothing in user input area to append")
+            # show editor, hide preview
+            master.display = False
+            user_input_widget.display = True
+            user_input_widget.focus()
+
+        self._sync_right_column()
 
     def on_file_deleted(self, message: FileDeleted) -> None:
         """If the deleted file is currently open, clear the editor."""
@@ -81,6 +88,42 @@ class BaseScreen(Screen):
     def _on_file_selected(self, path) -> None:
         if path is not None:
             self.load_file(path)
+
+    def _sync_right_column(self) -> None:
+        """
+        Show or hide the right column based on what is visible inside it.
+        When preview is active, transcript row is always hidden so preview is fullscreen.
+        """
+        try:
+            right_column = self.query_one("#right-column", Container)
+            master_preview = self.query_one("#master", MasterMarkdown)
+        except Exception:
+            return
+
+        is_preview_active = master_preview.display
+
+        try:
+            transcript_row = self.query_one("#transcript-row")
+            mic_tabs = self.query_one("#mic-tabs")
+            loopback_tabs = self.query_one("#loopback-tabs")
+
+            # hide transcript row if preview is active, otherwise show based on tab content
+            if is_preview_active:
+                transcript_row.display = False
+            elif mic_tabs.display or loopback_tabs.display:
+                transcript_row.display = True
+            else:
+                transcript_row.display = False
+
+            is_transcript_row_visible = transcript_row.display
+        except Exception:
+            is_transcript_row_visible = False
+
+        # right column visible if EITHER preview OR transcript row is visible
+        if is_preview_active or is_transcript_row_visible:
+            right_column.display = True
+        else:
+            right_column.display = False
 
     # --------------------------------------- Quick Actions -------------------------------------------------
 
@@ -111,12 +154,7 @@ class BaseScreen(Screen):
     def _get_quick_actions(self) -> list[QuickAction]:
         """Return the list of global actions (not attached to a panel).
         Subclasses extend this to add screen-specific actions."""
-        return [
-            QuickAction("1", "Editor", "mode:editor"),
-            QuickAction("2", "Mic", "mode:mic"),
-            QuickAction("3", "Loopback", "mode:loopback"),
-            QuickAction("4", "Full", "mode:full"),
-        ]
+        return []
 
     def action_quick_actions(self) -> None:
         """Open the quick-action / jump overlay."""
@@ -141,19 +179,22 @@ class BaseScreen(Screen):
             except Exception:
                 pass
         elif kind == "action":
-            if value.startswith("mode:"):
-                mode = value.split(":", 1)[1]
-                self.app.switch_mode(mode)
+            # invoke the action method
+            action_method = getattr(self, f"action_{value}", None)
+            if action_method:
+                action_method()
             else:
-                method = getattr(self, f"action_{value}", None)
-                if method:
-                    method()
+                self.notify(f"Unknown action: {value}", severity="warning")
 
     def _apply_loaded_file(self, file_path: str, content: str) -> None:
         user_input_widget = self.query_one("#user", TextArea)
         user_input_widget.text = content
         self.current_file_path = file_path
         self.is_saved = True
+
+        # persist last opened file path so --resume can restore it
+        self.app.config.last_opened_file = file_path
+        save_config(self.app.config)
 
     # reactive callback
     def watch_current_file_path(self, new_path: str) -> None:
@@ -170,6 +211,19 @@ class BaseScreen(Screen):
             user_input_widget.border_title = f"{prefix}{name}"
         else:
             user_input_widget.border_title = "Input"
+
+    def _update_recording_indicator(self) -> None:
+        """Update the border subtitle on the input widget to show recording status."""
+        user_input_widget = self.query_one("#user", TextArea)
+        parts = []
+        if getattr(self.app, "is_recording", False):
+            parts.append("🔴 Mic")
+        if getattr(self.app, "is_loopback_recording", False):
+            parts.append("🔴 Loopback")
+        if parts:
+            user_input_widget.border_subtitle = " | ".join(parts)
+        else:
+            user_input_widget.border_subtitle = "⚪"
 
     def action_save_file(self) -> None:
         if not self.current_file_path:

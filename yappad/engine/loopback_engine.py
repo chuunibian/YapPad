@@ -1,5 +1,5 @@
 import pyaudiowpatch as pyaudio
-from .loopback_consumer import DeviceLoopbackCaptureT, PyAWParam
+from .loopback_consumer import DeviceLoopbackCaptureT
 
 
 class LoopbackEngine:

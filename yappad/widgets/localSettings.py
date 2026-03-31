@@ -1,10 +1,10 @@
 from textual.app import ComposeResult
 from textual.containers import Vertical
-from textual.widgets import Label, Select, Switch, Static, Input, Button
+from textual.widgets import Label, Select, Switch, Input, Button
 from textual import on
 
 from ..core.storage import save_config
-from ..core.constants import WHISPER_MODELS, AUDIO_SOURCES, DETECT_MODES, DEVICES
+from ..core.constants import WHISPER_MODELS, DEVICES
 from ..engine.whisper_engine import TranscriptionEngine
 from pathlib import Path
 
@@ -31,26 +31,27 @@ class LocalSettings(Vertical):
     def compose(self) -> ComposeResult:
         yield Label("Settings", id="settings-title")
 
-        # Documents directory setting
-        yield Label("Documents Directory")
+        # ── Documents directory ──
+        yield Label("📁 Documents Directory")
         yield Input(
             value=self.app.config.document_dir,
             placeholder="Path to documents folder",
             id="documents-dir-input",
         )
-        yield Button("Apply", id="apply-docs-dir-btn", variant="primary")
+        yield Button("Apply Path", id="apply-docs-dir-btn", variant="primary")
 
-        # ── Mic device selection (from sdEngine) ──
+        # ── Audio device selection ──
+        yield Label("🎤 Audio Devices")
         mic_devices = self._build_device_options(self.app.mic_engine.get_devices())
         yield Select(mic_devices, prompt="Microphone", id="mic-device")
 
-        # ── Loopback device selection (from LoopbackEngine) ──
         loopback_devices = self._build_device_options(
             self.app.loopback_engine.get_devices()
         )
         yield Select(loopback_devices, prompt="Loopback Device", id="loopback-device")
 
-        yield Label("Whisper Settings")
+        # ── Whisper settings ──
+        yield Label("Whisper Model")
         with Vertical(id="whisper-settings-container"):
             yield Select(
                 self._build_model_options(),
@@ -65,11 +66,10 @@ class LocalSettings(Vertical):
                 value=self.app.config.default_device,
             )
             yield Button(
-                "Confirm Whisper Switch", id="apply-whisper-btn", variant="primary"
+                "Apply Whisper", id="apply-whisper-btn", variant="primary"
             )
 
-        # yield Select(AUDIO_SOURCES, prompt="Audio Source", id="audio-source")
-        # yield Select(DETECT_MODES, prompt="Detect Mode", id="detect-mode")
+        # ── Misc ──
         with Vertical(id="toggle-row"):
             yield Label("Auto-queue on silence")
             yield Switch(value=False, id="auto-queue-toggle")
@@ -140,7 +140,7 @@ class LocalSettings(Vertical):
                 return
 
             # Save new config
-            # TODO remove this later and add it into another place as this resaves the config each time!
+            # TODO remove this later and add it into another place as this resaves the config each time
             self.app.config.default_whisper_model = model_select.value
             self.app.config.default_device = device_select.value
             save_config(self.app.config)

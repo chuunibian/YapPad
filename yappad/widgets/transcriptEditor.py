@@ -1,7 +1,5 @@
 from textual.app import ComposeResult
-from textual.containers import Horizontal, Vertical
-from textual.reactive import reactive
-from textual.widgets import Label
+from textual.containers import Vertical
 from .transcriptInputArea import TranscriptRichLog
 from .customTranscriptFooter import CustomTranscriptFooter
 

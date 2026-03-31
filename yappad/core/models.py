@@ -1,5 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+from datetime import datetime
 from .constants import DEFAULT_WHISPER_MODEL, DEFAULT_COMPUTE_TYPE, DEFAULT_DEVICE
 
 _DEFAULT_DIR = str(
@@ -22,6 +23,7 @@ class AppConfig:
     default_layout: int = 1
     default_whisper_model: str = DEFAULT_WHISPER_MODEL
     default_device: str = DEFAULT_DEVICE
+    last_opened_file: str = ""
 
 
 @dataclass
@@ -51,4 +53,14 @@ def WhisperModelComputeTypeMapper(device):
         return "float16"
     else: # default
         return "int8"
+
+
+@dataclass
+class TranscriptClip:
+    """One block of transcribed audio. Timestamp is auto-filled on creation."""
+
+    text: str
+    timestamp: str = field(
+        default_factory=lambda: datetime.now().strftime("%H:%M:%S")
+    )
 

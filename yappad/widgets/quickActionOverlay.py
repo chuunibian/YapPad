@@ -1,8 +1,8 @@
 from textual.app import ComposeResult
-from textual.containers import Center, Horizontal
+from textual.containers import Center
 from textual.screen import ModalScreen
 from textual.widget import Widget
-from textual.widgets import Label, Static
+from textual.widgets import Label
 from textual.binding import Binding
 from textual.errors import NoWidget
 

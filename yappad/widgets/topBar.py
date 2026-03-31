@@ -1,5 +1,5 @@
 from textual.containers import Horizontal
-from textual.widgets import Input, Label
+from textual.widgets import Input
 from textual.app import ComposeResult
 
 

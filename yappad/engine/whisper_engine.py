@@ -2,7 +2,7 @@ import gc
 from faster_whisper import WhisperModel
 from huggingface_hub import scan_cache_dir
 
-from ..core.models import WhisperModelComputeTypeMapper, WhisperModelConfig
+from ..core.models import WhisperModelComputeTypeMapper
 
 
 class TranscriptionEngine:

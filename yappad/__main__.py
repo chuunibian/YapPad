@@ -10,6 +10,12 @@ def parse_args():
         action="store_true",
         help="flag to run the app without creating transcription models in memory",
     )
+    parser.add_argument(
+        "--resume",
+        "-r",
+        action="store_true",
+        help="automatically open the last file you were working on",
+    )
     return parser.parse_args()
 
 

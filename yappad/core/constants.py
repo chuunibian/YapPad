@@ -11,38 +11,10 @@ WHISPER_MODELS = [
     ("Turbo (fast + accurate)", "turbo"),
 ]
 
-# ─── Compute Types ───────────────────────────────────────────────
-COMPUTE_TYPES = [
-    ("INT8 (fastest, CPU-friendly)", "int8"),
-    ("Float16 (GPU recommended)", "float16"),
-    ("Float32 (most precise)", "float32"),
-]
-
 # ─── Device Options ──────────────────────────────────────────────
 DEVICES = [
     ("CPU", "cpu"),
     ("CUDA (GPU)", "cuda"),
-]
-
-# ─── Layout Modes ────────────────────────────────────────────────
-LAYOUT_MODES = [
-    ("Editor Only", "editor"),
-    ("Mic Mode", "mic"),
-    ("Loopback", "loopback"),
-    ("Full", "full"),
-]
-
-# ─── Audio Source ────────────────────────────────────────────────
-AUDIO_SOURCES = [
-    ("Microphone", "mic"),
-    ("Device Audio", "device"),
-    ("Both", "both"),
-]
-
-# ─── Detection Modes ────────────────────────────────────────────
-DETECT_MODES = [
-    ("Auto Detect Silence", "auto"),
-    ("Manual Trigger", "manual"),
 ]
 
 # ─── Audio Sample Rates ─────────────────────────────────────────

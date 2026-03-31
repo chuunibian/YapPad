@@ -6,9 +6,9 @@
 #     BORDER_TITLE = "Master Markdown"
 
 
-from textual.widgets import Markdown
+from textual.widgets import MarkdownViewer
 
 
-class MasterMarkdown(Markdown):
+class MasterMarkdown(MarkdownViewer):
     BORDER_TITLE = "Preview"
     can_focus = True

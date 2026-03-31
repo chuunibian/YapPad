@@ -1,11 +1,12 @@
 from textual.app import ComposeResult
-from textual.containers import Horizontal, Vertical
+from textual.containers import Vertical
 from textual.screen import ModalScreen
 from textual.widgets import Footer
 from textual.binding import Binding
 
 from .localFileExplorer import LocalFileExplorer
 from .newFileOverlay import NewFileOverlay
+from .newFolderOverlay import NewFolderOverlay
 from .deleteConfirmOverlay import DeleteConfirmOverlay
 from pathlib import Path
 from ..core.messages import FileSelected, FileDeleted
@@ -17,6 +18,7 @@ class PopupComponent(ModalScreen):
         Binding("ctrl+o", "dismiss_popup", "Close"),
         Binding("ctrl+q", "quit", "Quit App"),
         Binding("ctrl+n", "new_file", "New Note"),
+        Binding("ctrl+f", "new_folder", "New Folder"),
         Binding("delete", "delete_selected", "Delete", show=True),
         Binding("ctrl+d", "delete_selected", "Delete", show=False),
     ]
@@ -40,16 +42,44 @@ class PopupComponent(ModalScreen):
         self.app.exit()
 
     def action_new_file(self) -> None:
-        """Open the new file overlay."""
-        self.app.push_screen(NewFileOverlay(), callback=self._on_new_file_created)
+        """Open the new file overlay, creating in the currently selected directory."""
+        file_tree = self.query_one("#file-tree", LocalFileExplorer)
+        selected = file_tree.get_selected_path()
+
+        if selected is not None:
+            # if a file is selected, use its parent directory
+            target_dir = selected if selected.is_dir() else selected.parent
+        else:
+            # fallback to root documents dir
+            target_dir = Path(self.app.config.document_dir)
+
+        self.app.push_screen(NewFileOverlay(target_dir), callback=self._on_new_file_created)
 
     def _on_new_file_created(self, path) -> None:
         """Called when the new file overlay dismisses."""
         if path is not None:
-            # refresh the file tree so the new file shows up
             file_tree = self.query_one("#file-tree", LocalFileExplorer)
             file_tree.reload()
             self.notify(f"Created: {path.name}")
+
+    def action_new_folder(self) -> None:
+        """Open the new folder overlay, creating inside the currently selected directory."""
+        file_tree = self.query_one("#file-tree", LocalFileExplorer)
+        selected = file_tree.get_selected_path()
+
+        if selected is not None:
+            target_dir = selected if selected.is_dir() else selected.parent
+        else:
+            target_dir = Path(self.app.config.document_dir)
+
+        self.app.push_screen(NewFolderOverlay(target_dir), callback=self._on_new_folder_created)
+
+    def _on_new_folder_created(self, path) -> None:
+        """Called when the new folder overlay dismisses."""
+        if path is not None:
+            file_tree = self.query_one("#file-tree", LocalFileExplorer)
+            file_tree.reload()
+            self.notify(f"Created folder: {path.name}")
 
     def action_delete_selected(self) -> None:
         """Delete the currently highlighted file or folder after confirmation."""
